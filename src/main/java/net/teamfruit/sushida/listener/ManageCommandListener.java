@@ -37,7 +37,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
     private boolean validateGroupOwner(CommandSender sender, PlayerData state, String actionName) {
         if (!state.getGroup().isOwner(state)) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("グループのホストのみ" + actionName + "ができます").color(ChatColor.RED)
                     .create()
             );
@@ -49,7 +49,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
     private boolean validateSession(CommandSender sender, PlayerData state, String actionName) {
         if (state.hasSession()) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("プレイ中に" + actionName + "はできません").color(ChatColor.RED)
                     .create()
             );
@@ -61,7 +61,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
     private boolean validateRanking(CommandSender sender, PlayerData state, String actionName) {
         if (state.getGroup().hasRanking()) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("ランキングモードでは" + actionName + "はできません").color(ChatColor.RED)
                     .create()
             );
@@ -78,7 +78,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("セレクターが間違っています").color(ChatColor.RED)
                     .create()
             );
@@ -98,7 +98,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
             if ("execute".equals(arg0)) {
                 if (!sender.hasPermission("sushida.other")) {
                     sender.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("他人としてコマンドを実行するためには権限が足りません").color(ChatColor.RED)
                             .create()
                     );
@@ -106,7 +106,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                 }
                 if (arg2 == null) {
                     sender.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("引数が足りません。 例「/sushida execute @p ranking regular」").color(ChatColor.RED)
                             .create()
                     );
@@ -118,7 +118,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
             if ("admin".equals(arg0)) {
                 if (!sender.hasPermission("sushida.admin")) {
                     sender.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("コンフィグを変更するためには権限が足りません").color(ChatColor.RED)
                             .create()
                     );
@@ -128,14 +128,14 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     boolean value = Boolean.parseBoolean(arg3);
                     Sushida.enableAroundYou.set(value);
                     sender.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append(String.format("コンフィグ(周りの音)を(%s)にセットしました", value)).color(ChatColor.GREEN)
                             .create()
                     );
                     return true;
                 }
                 sender.sendMessage(new ComponentBuilder()
-                        .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                        .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                         .append("コマンドが見つかりません").color(ChatColor.RED)
                         .create()
                 );
@@ -145,7 +145,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("プレイヤーのみ実行可能です。").color(ChatColor.RED)
                     .create()
             );
@@ -165,7 +165,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     if (!player.hasPermission("sushida.other")) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("他人を強制追加するためには権限が足りません").color(ChatColor.RED)
                                 .create()
                         );
@@ -180,7 +180,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                             .collect(Collectors.toList());
                     if (!errored.isEmpty())
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(errored.stream()
                                         .map(e -> new ComponentBuilder(e).color(ChatColor.YELLOW).create())
                                         .collect(TitleUtils.joining(new ComponentBuilder(", ").color(ChatColor.GRAY).create()))).color(ChatColor.WHITE)
@@ -189,7 +189,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         );
                     if (players.size() > errored.size())
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append((players.size() - errored.size()) + "人のプレイヤー").color(ChatColor.WHITE)
                                 .append("を参加させました").color(ChatColor.GREEN)
                                 .create()
@@ -206,7 +206,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                             .filter(e -> e.getGroup().equals(state.getGroup()))
                             .forEach(PlayerData::leave);
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append(players.size() + "人").color(ChatColor.WHITE)
                             .append("を退出させました").color(ChatColor.GREEN)
                             .create()
@@ -225,7 +225,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                             .collect(Collectors.toList());
                     if (!errored.isEmpty())
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(errored.stream()
                                         .map(e -> new ComponentBuilder(e).color(ChatColor.YELLOW).create())
                                         .collect(TitleUtils.joining(new ComponentBuilder(", ").color(ChatColor.GRAY).create()))).color(ChatColor.WHITE)
@@ -237,13 +237,13 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                             .collect(Collectors.toList());
                     invites.forEach(e -> {
                         e.player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(player.getName()).color(ChatColor.WHITE)
                                 .append(" があなたを寿司打に招待しています。").color(ChatColor.GREEN)
                                 .create()
                         );
                         e.player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(new TextComponent(
                                         new ComponentBuilder()
                                                 .append("[クリックで参加]").color(ChatColor.GOLD).bold(true)
@@ -261,7 +261,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     });
                     if (invites.size() > 0)
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append((players.size() - errored.size()) + "人のプレイヤー").color(ChatColor.WHITE)
                                 .append("を招待しました").color(ChatColor.GREEN)
                                 .create()
@@ -272,7 +272,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                 case "join": {
                     if (arg1 == null) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("/sushida join <プレイヤー名>").color(ChatColor.RED)
                                 .create()
                         );
@@ -283,7 +283,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     Player groupPlayer = Bukkit.getPlayer(arg1);
                     if (groupPlayer == null) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("プレイヤーが見つかりません").color(ChatColor.RED)
                                 .create()
                         );
@@ -298,14 +298,14 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     state.destroy();
                     if (state.join(group))
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(groupPlayer.getName()).color(ChatColor.WHITE)
                                 .append("に参加しました").color(ChatColor.GREEN)
                                 .create()
                         );
                     else
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append(groupPlayer.getName()).color(ChatColor.WHITE)
                                 .append("の参加に失敗しました").color(ChatColor.RED)
                                 .create()
@@ -316,7 +316,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     if (!validateSession(player, state, "部屋の変更"))
                         return true;
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append(state.getGroup().owner.player.getName()).color(ChatColor.WHITE)
                             .append("から退出しました").color(ChatColor.GREEN)
                             .create()
@@ -332,7 +332,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     if (!state.getGroup().setRanking(arg1)) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("ランキングを").color(ChatColor.GREEN)
                                 .append("なし").color(ChatColor.WHITE)
                                 .append("に設定しました").color(ChatColor.GREEN)
@@ -341,7 +341,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     } else {
                         Optional<String> title = state.getGroup().getRanking().map(e -> e.title);
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("ランキングを「").color(ChatColor.GREEN)
                                 .append(title.orElse(arg1)).color(ChatColor.WHITE)
                                 .append("」に設定しました").color(ChatColor.GREEN)
@@ -359,7 +359,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     if (!state.getGroup().setWord(arg1)) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("辞書「").color(ChatColor.RED)
                                 .append(StringUtils.defaultString(arg1)).color(ChatColor.WHITE)
                                 .append("」は存在しません").color(ChatColor.RED)
@@ -369,7 +369,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     }
                     String title = state.getGroup().getWord().title;
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("辞書を「").color(ChatColor.GREEN)
                             .append(Optional.ofNullable(title).orElse(arg1)).color(ChatColor.WHITE)
                             .append("」に設定しました").color(ChatColor.GREEN)
@@ -386,7 +386,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     if (!state.getGroup().setMode(arg1)) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("ルール「").color(ChatColor.RED)
                                 .append(StringUtils.defaultString(arg1)).color(ChatColor.WHITE)
                                 .append("」は存在しません").color(ChatColor.RED)
@@ -395,7 +395,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("ルールを「").color(ChatColor.GREEN)
                             .append(state.getGroup().getMode().title()).color(ChatColor.WHITE)
                             .append("」に設定しました").color(ChatColor.GREEN)
@@ -413,7 +413,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     GameSettingType type = state.getGroup().getMode().getSettingType(arg1);
                     if (type == null) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("設定「").color(ChatColor.RED)
                                 .append(StringUtils.defaultString(arg1)).color(ChatColor.WHITE)
                                 .append("」は存在しません").color(ChatColor.RED)
@@ -430,7 +430,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                             throw new NumberFormatException();
                     } catch (NumberFormatException e) {
                         player.sendMessage(new ComponentBuilder()
-                                .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                                .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append("数値が正しくありません").color(ChatColor.RED)
                                 .create()
                         );
@@ -438,7 +438,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     }
                     state.getGroup().getMode().setSetting(state.getGroup().getSettings(), type, value);
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("設定「").color(ChatColor.GREEN)
                             .append(type.title).color(ChatColor.WHITE)
                             .append("」を「").color(ChatColor.GREEN)
@@ -482,12 +482,12 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                 }
                 default: {
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("不明なコマンドです").color(ChatColor.RED)
                             .create()
                     );
                     player.sendMessage(new ComponentBuilder()
-                            .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                            .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                             .append("/sushida").color(ChatColor.GRAY)
                             .append(" でメニューを表示します").color(ChatColor.GREEN)
                             .create()
