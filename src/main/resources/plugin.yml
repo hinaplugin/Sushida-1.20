@@ -1,0 +1,28 @@
+name: Sushida
+version: ${project.version}
+main: net.teamfruit.sushida.Sushida
+api-version: 1.20
+prefix: Sushida
+authors: [Kamesuta, hina2113]
+description: 寿司打
+
+commands:
+  sushida:
+    description: 寿司打開始
+    usage: 寿司打開始
+    permission: sushida
+    aliases: ["s"]
+  " ":
+    description: 寿司打
+    usage: 「/」の後にスペースを押して寿司打を開始する。Enterキーで寿司打を中断する。
+    permission: sushida
+permissions:
+  sushida:
+    description: 寿司打
+    default: true
+  sushida.other:
+    description: 他人の寿司打をコントロール
+    default: op
+  sushida.admin:
+    description: コンフィグを変更
+    default: op
