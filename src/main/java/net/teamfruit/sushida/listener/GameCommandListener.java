@@ -21,7 +21,7 @@ public class GameCommandListener implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("プレイヤーのみ実行可能です。").color(ChatColor.RED)
                     .create()
             );
@@ -33,7 +33,7 @@ public class GameCommandListener implements CommandExecutor, TabCompleter {
 
         if (!state.hasSession()) {
             player.sendMessage(new ComponentBuilder()
-                    .append("[かめすたプラグイン] ").color(ChatColor.LIGHT_PURPLE)
+                    .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                     .append("寿司打を始めるためには").color(ChatColor.GREEN)
                     .append(new ComponentBuilder(" /sushida ").color(ChatColor.GRAY).bold(true).create())
                     .append("と入力してください").color(ChatColor.GREEN)
