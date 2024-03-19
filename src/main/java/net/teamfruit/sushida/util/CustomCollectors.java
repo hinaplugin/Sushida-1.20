@@ -27,8 +27,8 @@ public class CustomCollectors {
         return Collectors.collectingAndThen(
                 Collectors.toCollection(ArrayList::new),
                 list -> {
-                    if (count >= list.size())
-                        return Collections.emptyList();
+                    if (count > list.size())
+                        return list;
                     Random rand = ThreadLocalRandom.current();
                     IntStream.range(0, list.size() - count).forEach(e -> list.remove(rand.nextInt(list.size())));
                     return list;
