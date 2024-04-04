@@ -2,15 +2,16 @@ package net.teamfruit.sushida.mode;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.teamfruit.sushida.SoundManager;
-import net.teamfruit.sushida.Sushida;
 import net.teamfruit.sushida.player.Group;
 import net.teamfruit.sushida.player.StateContainer;
 import net.teamfruit.sushida.util.CustomCollectors;
 import net.teamfruit.sushida.util.SimpleTask;
-import org.apache.commons.lang3.math.NumberUtils;
+import net.teamfruit.sushida.util.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -21,7 +22,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TimeAttackMode implements GameMode {
     public static final GameSettingType SettingCount = new GameSettingType("count", "問題数", "問題数", 30, Arrays.asList(10, 20, 30, 60, 120));
@@ -199,22 +199,87 @@ public class TimeAttackMode implements GameMode {
 
     @Override
     public ImmutableList<Map.Entry<String, String>> getWords(Group group) {
+        // 戻り値を作成するImmutableListビルダー
+        ImmutableList.Builder<Map.Entry<String, String>> selectedWordsBuilder = ImmutableList.builder();
+
+        // 設定
         int setting = getSetting(group.getSettings(), SettingCount);
+
+        // 出題するレベルごとの単語数
         List<Integer> splits = CustomCollectors.splitInt(setting, group.getWord().mappings.size());
+
+        // 単語をレベルごとに分けて取得
         List<Map.Entry<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>>> wordRequiredListByLevel = group.getWord().mappings.entrySet().stream()
-                .sorted((a, b) -> {
-                    int ai = NumberUtils.toInt(CharMatcher.inRange('0', '9').retainFrom(a.getKey()), -1);
-                    int bi = NumberUtils.toInt(CharMatcher.inRange('0', '9').retainFrom(b.getKey()), -1);
-                    return Comparator.<Integer>naturalOrder().compare(ai, bi);
-                })
+                .sorted(Comparator.comparingInt(a -> NumberUtils.toInt(CharMatcher.inRange('0', '9').retainFrom(a.getKey()), -1)))
                 .collect(Collectors.toList());
-        return IntStream.range(0, splits.size())
-                .mapToObj(i ->
-                        wordRequiredListByLevel.get(i).getValue().stream()
-                                .collect(CustomCollectors.toRandomPickList(splits.get(i)))
-                )
-                .flatMap(Collection::stream)
-                .flatMap(Collection::stream)
-                .collect(ImmutableList.toImmutableList());
+
+        // レベルごとの単語リスト
+        final Map<Integer, List<Map.Entry<String, String>>> wordMap = Maps.newTreeMap();
+
+        /*
+          List<Map.Entry<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>>>から
+          Map.Entry(String, String)を作成する
+         */
+        for (Map.Entry<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>> key : wordRequiredListByLevel){
+            final List<Map.Entry<String, String>> wordLevel = Lists.newArrayList();
+            for (ImmutableList<Map.Entry<String, String>> imKey: key.getValue()){
+                wordLevel.add(imKey.get(0));
+            }
+            final int lvl = wordMap.size();
+            wordMap.put(lvl, wordLevel);
+        }
+
+        // 選択した単語
+        List<Map.Entry<String, String>> results = new ArrayList<>();
+
+        for (int idx = 0; idx < splits.size(); idx++) {
+            int count = splits.get(idx);
+            List<Map.Entry<String, String>> ls = new ArrayList<>(wordMap.get(idx));
+            Collections.shuffle(ls);
+            List<Map.Entry<String, String>> results_ = new ArrayList<>();
+
+            for (Map.Entry<String, String> r : ls) {
+                if (!results.contains(r) && !results_.contains(r)) {
+                    results_.add(r);
+                }
+                if (results_.size() >= count) {
+                    break;
+                }
+            }
+
+            if (results_.size() < count) {
+                for (int _idx = 0; _idx < wordMap.size(); _idx++) {
+                    int n = (idx + _idx + 1) % wordMap.size();
+                    List<Map.Entry<String, String>> otherLs = new ArrayList<>(wordMap.get(n));
+                    Collections.shuffle(otherLs);
+                    for (Map.Entry<String, String> r : otherLs) {
+                        if (!results.contains(r) && !results_.contains(r)) {
+                            results_.add(r);
+                        }
+                        if (results_.size() >= count) {
+                            break;
+                        }
+                    }
+                    if (results_.size() >= count) {
+                        break;
+                    }
+                }
+            }
+
+            if (results_.size() < count) {
+                List<Map.Entry<String, String>> allWords = new ArrayList<>();
+                for (List<Map.Entry<String, String>> ls2 : wordMap.values()) {
+                    allWords.addAll(ls2);
+                }
+                Collections.shuffle(allWords);
+                results_.addAll(allWords.subList(0, count - results_.size()));
+            }
+
+            results.addAll(results_);
+            for (Map.Entry<String, String> item : results_) {
+                selectedWordsBuilder.add(item);
+            }
+        }
+        return selectedWordsBuilder.build();
     }
 }

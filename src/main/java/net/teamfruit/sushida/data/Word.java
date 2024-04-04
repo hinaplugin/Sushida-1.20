@@ -3,7 +3,6 @@ package net.teamfruit.sushida.data;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
@@ -19,7 +18,7 @@ public class Word {
     public final String title;
     public final ImmutableMap<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>> mappings;
 
-    public Word(String title, ImmutableMap<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>> mappings) {
+    public Word(@Nullable String title, ImmutableMap<String, ImmutableList<ImmutableList<Map.Entry<String, String>>>> mappings) {
         this.title = title;
         this.mappings = mappings;
     }
@@ -28,7 +27,7 @@ public class Word {
     public static Word load(InputStream input) {
         try {
 
-            Yaml cfg = new Yaml(new CustomClassLoaderConstructor(Word.class.getClassLoader(), new LoaderOptions()));
+            Yaml cfg = new Yaml(new CustomClassLoaderConstructor(Word.class.getClassLoader()));
             WordData data = cfg.loadAs(new InputStreamReader(input, Charsets.UTF_8), WordData.class);
             return new Word(
                     data.title,

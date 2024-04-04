@@ -24,11 +24,11 @@ public class Group {
     private String wordName = "word";
     private GameMode gameMode = GameModes.time.mode;
     private Word word = Sushida.logic.word.get(wordName);
-    private Map<GameSettingType, Integer> settings = new HashMap<>();
-    private Set<PlayerData> members = new HashSet<>();
+    private final Map<GameSettingType, Integer> settings = new HashMap<>();
+    private final Set<PlayerData> members = new HashSet<>();
     private ImmutableList<Map.Entry<String, String>> wordRequiredList;
 
-    private Scoreboard groupScoreboard;
+    private final Scoreboard groupScoreboard;
     private Team groupTeamTitle;
 
     private Team groupTeamCountdownWait;
@@ -46,15 +46,14 @@ public class Group {
         return player.equals(owner);
     }
 
-    public boolean setOwner(PlayerData player) {
+    public void setOwner(PlayerData player) {
         if (isOwner(player))
-            return false;
+            return;
         if (!members.contains(player))
-            return false;
+            return;
         members.remove(player);
         members.add(owner);
         owner = player;
-        return true;
     }
 
     public Map<GameSettingType, Integer> getSettings() {
@@ -169,11 +168,11 @@ public class Group {
         return team;
     }
 
-    private Objective initObjective(String name, String title, DisplaySlot slot) {
+    private Objective initObjective(String name, DisplaySlot slot) {
         Objective objective = groupScoreboard.getObjective(name);
         if (objective != null)
             objective.unregister();
-        objective = groupScoreboard.registerNewObjective(name, "dummy", title);
+        objective = groupScoreboard.registerNewObjective(name, "dummy", "スコア");
         objective.setDisplaySlot(slot);
         return objective;
     }
@@ -186,7 +185,7 @@ public class Group {
         groupTeamPlay = initTeam("sushida.play", ChatColor.RED + "[▶]" + ChatColor.RESET);
         groupTeamResultWait = initTeam("sushida.goal", ChatColor.GREEN + "[✔]" + ChatColor.RESET);
 
-        this.scoreLeaderboard = initObjective("score", "スコア", DisplaySlot.SIDEBAR);
-        this.tabLeaderboard = initObjective("tab", "スコア", DisplaySlot.PLAYER_LIST);
+        this.scoreLeaderboard = initObjective("score", DisplaySlot.SIDEBAR);
+        this.tabLeaderboard = initObjective("tab", DisplaySlot.PLAYER_LIST);
     }
 }

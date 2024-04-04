@@ -7,7 +7,7 @@ import net.teamfruit.sushida.listener.*;
 import net.teamfruit.sushida.logic.GameLogic;
 import net.teamfruit.sushida.ranking.RankingSetting;
 import net.teamfruit.sushida.util.ConfigProperty;
-import org.apache.commons.lang3.StringUtils;
+import net.teamfruit.sushida.util.StringUtils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;

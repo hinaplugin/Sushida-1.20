@@ -8,13 +8,15 @@ import net.teamfruit.sushida.mode.GameModes;
 import net.teamfruit.sushida.mode.GameSettingType;
 import net.teamfruit.sushida.player.Group;
 import net.teamfruit.sushida.player.PlayerData;
+import net.teamfruit.sushida.util.StringUtils;
 import net.teamfruit.sushida.util.TitleUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.command.*;
-import org.bukkit.entity.Entity;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,9 +43,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     .append("グループのホストのみ" + actionName + "ができます").color(ChatColor.RED)
                     .create()
             );
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private boolean validateSession(CommandSender sender, PlayerData state, String actionName) {
@@ -53,9 +55,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     .append("プレイ中に" + actionName + "はできません").color(ChatColor.RED)
                     .create()
             );
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private boolean validateRanking(CommandSender sender, PlayerData state, String actionName) {
@@ -65,9 +67,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     .append("ランキングモードでは" + actionName + "はできません").color(ChatColor.RED)
                     .create()
             );
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private List<Player> getPlayers(CommandSender sender, List<String> args) {
@@ -87,7 +89,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] arg) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] arg) {
         List<String> args = Arrays.asList(arg);
         String arg0 = get(args, 0);
         String arg1 = get(args, 1);
@@ -159,9 +161,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
         if (arg0 != null) {
             switch (arg0) {
                 case "assign": {
-                    if (!validateGroupOwner(player, state, "メンバーの変更"))
+                    if (validateGroupOwner(player, state, "メンバーの変更"))
                         return true;
-                    if (!validateSession(player, state, "メンバーの変更"))
+                    if (validateSession(player, state, "メンバーの変更"))
                         return true;
                     if (!player.hasPermission("sushida.other")) {
                         player.sendMessage(new ComponentBuilder()
@@ -197,9 +199,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "kick": {
-                    if (!validateGroupOwner(player, state, "メンバーの変更"))
+                    if (validateGroupOwner(player, state, "メンバーの変更"))
                         return true;
-                    if (!validateSession(player, state, "メンバーの変更"))
+                    if (validateSession(player, state, "メンバーの変更"))
                         return true;
                     List<Player> players = getPlayers(player, getFrom(args, 1));
                     players.stream().map(Sushida.logic.states::getPlayerState)
@@ -214,7 +216,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "invite": {
-                    if (!validateSession(player, state, "招待"))
+                    if (validateSession(player, state, "招待"))
                         return true;
                     List<Player> players = getPlayers(player, getFrom(args, 1)).stream()
                             .filter(e -> !e.equals(player))
@@ -259,7 +261,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                                 )).create()
                         );
                     });
-                    if (invites.size() > 0)
+                    if (!invites.isEmpty())
                         player.sendMessage(new ComponentBuilder()
                                 .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
                                 .append((players.size() - errored.size()) + "人のプレイヤー").color(ChatColor.WHITE)
@@ -278,7 +280,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         );
                         return true;
                     }
-                    if (!validateSession(player, state, "メンバーの変更"))
+                    if (validateSession(player, state, "メンバーの変更"))
                         return true;
                     Player groupPlayer = Bukkit.getPlayer(arg1);
                     if (groupPlayer == null) {
@@ -290,10 +292,10 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     PlayerData groupState = Sushida.logic.states.getPlayerState(groupPlayer);
-                    if (!validateSession(player, state, "部屋の変更"))
+                    if (validateSession(player, state, "部屋の変更"))
                         return true;
                     Group group = groupState.getGroup();
-                    if (!validateSession(player, group.owner, "部屋の変更"))
+                    if (validateSession(player, group.owner, "部屋の変更"))
                         return true;
                     state.destroy();
                     if (state.join(group))
@@ -313,7 +315,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "leave": {
-                    if (!validateSession(player, state, "部屋の変更"))
+                    if (validateSession(player, state, "部屋の変更"))
                         return true;
                     player.sendMessage(new ComponentBuilder()
                             .append("[寿司打プラグイン] ").color(ChatColor.LIGHT_PURPLE)
@@ -326,9 +328,9 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "ranking": {
-                    if (!validateGroupOwner(player, state, "ランキングの変更"))
+                    if (validateGroupOwner(player, state, "ランキングの変更"))
                         return true;
-                    if (!validateSession(player, state, "ランキングの変更"))
+                    if (validateSession(player, state, "ランキングの変更"))
                         return true;
                     if (!state.getGroup().setRanking(arg1)) {
                         player.sendMessage(new ComponentBuilder()
@@ -351,11 +353,11 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "word": {
-                    if (!validateGroupOwner(player, state, "辞書の変更"))
+                    if (validateGroupOwner(player, state, "辞書の変更"))
                         return true;
-                    if (!validateSession(player, state, "辞書の変更"))
+                    if (validateSession(player, state, "辞書の変更"))
                         return true;
-                    if (!validateRanking(player, state, "辞書の変更"))
+                    if (validateRanking(player, state, "辞書の変更"))
                         return true;
                     if (!state.getGroup().setWord(arg1)) {
                         player.sendMessage(new ComponentBuilder()
@@ -378,11 +380,11 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "rule": {
-                    if (!validateGroupOwner(player, state, "ルールの変更"))
+                    if (validateGroupOwner(player, state, "ルールの変更"))
                         return true;
-                    if (!validateSession(player, state, "ルールの変更"))
+                    if (validateSession(player, state, "ルールの変更"))
                         return true;
-                    if (!validateRanking(player, state, "ルールの変更"))
+                    if (validateRanking(player, state, "ルールの変更"))
                         return true;
                     if (!state.getGroup().setMode(arg1)) {
                         player.sendMessage(new ComponentBuilder()
@@ -404,11 +406,11 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "setting": {
-                    if (!validateGroupOwner(player, state, "詳細設定の変更"))
+                    if (validateGroupOwner(player, state, "詳細設定の変更"))
                         return true;
-                    if (!validateSession(player, state, "詳細設定の変更"))
+                    if (validateSession(player, state, "詳細設定の変更"))
                         return true;
-                    if (!validateRanking(player, state, "詳細設定の変更"))
+                    if (validateRanking(player, state, "詳細設定の変更"))
                         return true;
                     GameSettingType type = state.getGroup().getMode().getSettingType(arg1);
                     if (type == null) {
@@ -449,14 +451,14 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     break;
                 }
                 case "start": {
-                    if (!validateGroupOwner(player, state, "ゲームの開始"))
+                    if (validateGroupOwner(player, state, "ゲームの開始"))
                         return true;
                     state.getGroup().init();
                     state.getGroup().getPlayers().forEach(PlayerData::create);
                     return true;
                 }
                 case "stop": {
-                    if (!validateGroupOwner(player, state, "ゲームの終了"))
+                    if (validateGroupOwner(player, state, "ゲームの終了"))
                         return true;
                     state.getGroup().getPlayers().forEach(e -> {
                         e.destroy();
@@ -465,7 +467,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 case "restart": {
-                    if (!validateGroupOwner(player, state, "ゲームの開始"))
+                    if (validateGroupOwner(player, state, "ゲームの開始"))
                         return true;
                     state.getGroup().getPlayers().forEach(e -> {
                         e.destroy();
@@ -496,9 +498,6 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                 }
             }
         }
-
-        // タイトル表示
-        TitleUtils.showTitle(player);
 
         {
             player.sendMessage(new ComponentBuilder()
@@ -692,7 +691,7 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arg) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] arg) {
         if (!(sender instanceof Player))
             return Collections.emptyList();
         Player player = (Player) sender;
@@ -776,13 +775,11 @@ public class ManageCommandListener implements CommandExecutor, TabCompleter {
                 }
                 // Fall through
             case 4:
-                switch (arg0) {
-                    case "admin":
-                        if ("config".equals(arg1) && "aroundyou".equals(arg2))
-                            return Stream.of("true", "false")
-                                    .filter(e -> arg3 == null || e.startsWith(arg3))
-                                    .collect(Collectors.toList());
-                        break;
+                if (arg0.equals("admin")) {
+                    if ("config".equals(arg1) && "aroundyou".equals(arg2))
+                        return Stream.of("true", "false")
+                                .filter(e -> arg3 == null || e.startsWith(arg3))
+                                .collect(Collectors.toList());
                 }
                 // Fall through
             default:

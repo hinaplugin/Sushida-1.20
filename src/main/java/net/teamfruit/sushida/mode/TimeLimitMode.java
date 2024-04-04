@@ -9,7 +9,7 @@ import net.teamfruit.sushida.player.Group;
 import net.teamfruit.sushida.player.StateContainer;
 import net.teamfruit.sushida.util.CustomCollectors;
 import net.teamfruit.sushida.util.SimpleTask;
-import org.apache.commons.lang3.math.NumberUtils;
+import net.teamfruit.sushida.util.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -248,7 +248,7 @@ public class TimeLimitMode implements GameMode {
         return wordRequiredListByLevel.stream()
                 .flatMap(e -> e.getValue().stream())
                 .collect(CustomCollectors.toShuffledList()).stream()
-                .flatMap(e -> e.stream())
+                .flatMap(Collection::stream)
                 .collect(ImmutableList.toImmutableList());
     }
 }
